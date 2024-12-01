@@ -25,7 +25,9 @@ app.use(limiter); // Apply rate-limiting globally to all routes
 const logUserLocation = async (req) => {
   try {
     // Get IP from request (use x-forwarded-for for real-world apps behind proxies)
-    const userIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // Extract the client's IP address
+    const forwarded = req.headers['x-forwarded-for'];
+    const userIP = forwarded ? forwarded.split(',')[0] : req.socket.remoteAddress;
 
     // Fetch geolocation data from ip-api
     const locationResponse = await fetch(`http://ip-api.com/json/${userIP}`);

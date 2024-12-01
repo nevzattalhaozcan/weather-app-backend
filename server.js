@@ -9,7 +9,7 @@ app.use(cors()); // Allow client-side requests
 app.use(json());
 
 // Environment Variables (Replace with your key directly or use dotenv)
-const API_KEY = '47a14fd2121fdd503b275ffbbb724236'; // Securely stored
+const API_KEY = process.env.API_KEY;
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 /// Endpoint to fetch current weather

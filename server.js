@@ -8,7 +8,6 @@ const app = express();
 app.use(cors()); // Allow client-side requests
 app.use(json());
 
-// Environment Variables (Replace with your key directly or use dotenv)
 const API_KEY = process.env.API_KEY;
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 

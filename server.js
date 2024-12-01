@@ -6,10 +6,19 @@ const app = express();
 
 // Middleware
 app.use(cors()); // Allow client-side requests
-app.use(json());
+app.use(express.json());
 
 const API_KEY = process.env.API_KEY;
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
+
+// Set up rate-limiting middleware
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 15 minutes
+  max: 50, // Limit each IP to 100 requests per `windowMs`
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+});
+
+app.use(limiter); // Apply rate-limiting globally to all routes
 
 /// Endpoint to fetch current weather
 app.get('/weather', async (req, res) => {

@@ -1,6 +1,7 @@
 import express, { json } from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
+import rateLimit from "express-rate-limit";
 
 const app = express();
 

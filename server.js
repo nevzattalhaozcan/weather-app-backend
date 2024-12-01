@@ -21,8 +21,32 @@ const limiter = rateLimit({
 
 app.use(limiter); // Apply rate-limiting globally to all routes
 
+// Helper function to fetch user location
+const logUserLocation = async (req) => {
+  try {
+    // Get IP from request (use x-forwarded-for for real-world apps behind proxies)
+    const userIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    // Fetch geolocation data from ip-api
+    const locationResponse = await fetch(`http://ip-api.com/json/${userIP}`);
+    const locationData = await locationResponse.json();
+
+    // Log location details
+    console.log('User Location:', {
+      ip: userIP,
+      city: locationData.city,
+      country: locationData.country,
+      lat: locationData.lat,
+      lon: locationData.lon,
+    });
+  } catch (error) {
+    console.error('Error logging user location:', error);
+  }
+};
+
 /// Endpoint to fetch current weather
 app.get('/weather', async (req, res) => {
+  await logUserLocation(req); // Log user location
   const city = req.query.city;
   const lang = req.query.lang;
 
@@ -55,6 +79,7 @@ app.get('/weather', async (req, res) => {
 
 // Endpoint to fetch 5-day weather forecast
 app.get('/forecast', async (req, res) => {
+  await logUserLocation(req); // Log user location
   const city = req.query.city;
   const lang = req.query.lang;
 
